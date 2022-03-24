@@ -29,7 +29,6 @@ def encode(character, divisor):
     for number in sufix:
         codeword[j] = number
         j += 1
-    # print(j)
     return codeword[0: j]
 
 
@@ -64,7 +63,6 @@ def decode(coded, result, divisor):
                         decoded.append(int(prefix * divisor + sufix))
                         reading_prefix = True
                         for byte in decoded:
-                            print(byte)
                             result.write(bytes([byte]))
                         prefix = 0
                         sufix = 0
