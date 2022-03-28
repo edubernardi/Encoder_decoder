@@ -70,12 +70,12 @@ def decode(encoded_file, decoded_file):
                 else:
                     delta += bit * (2 ** (8 - digits_read))
                     digits_read += 1
-                    if digits_read == 8:
+                    if digits_read == 9:
                         if positive:
-                            value = last_value + delta
-                        else:
                             value = last_value - delta
-                        decoded_file.write(bytes([value])) # Gerando valores negativos, investigar
+                        else:
+                            value = last_value + delta
+                        decoded_file.write(bytes([value]))
                         last_value = value
                         delta = 0
                         digits_read = 0
