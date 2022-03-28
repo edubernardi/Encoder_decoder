@@ -3,6 +3,10 @@ import numpy as np
 import sys
 import util
 import golomb
+import unary
+import elias_gamma
+import fibonacci
+import delta
 
 
 def app_help():
@@ -23,13 +27,13 @@ if len(sys.argv) >= 4:
             if method.lower() == "golomb" or function.lower() == "1":
                 util.write_to_file(input_file, output_file, 1)
             elif method.lower() == "elias-gamma" or method.lower() == "elias gamma" or function.lower() == "2":
-                print("Elias gama ainda não implmentado")
+                util.write_to_file(input_file, output_file, 2)
             elif method.lower() == "fibonacci" or function.lower() == "3":
-                print("Fibonacci gama ainda não implmentado")
+                util.write_to_file(input_file, output_file, 3)
             elif method.lower() == "unary" or function.lower() == "4":
-                print("Unary gama ainda não implmentado")
+                util.write_to_file(input_file, output_file, 4)
             elif method.lower() == "delta" or function.lower() == "5":
-                print("Delta gama ainda não implmentado")
+                util.write_to_file(input_file, output_file, 5)
         else:
             app_help()
     elif function.lower() == "decode":
@@ -43,13 +47,21 @@ if len(sys.argv) >= 4:
                 print("Detected Golomb method with divisor", divisor)
                 golomb.decode(input_file, output_file, divisor)
             elif int.from_bytes(method, "big") == 2:
-                print("Elias gama ainda não implmentado")
+                output_file = open(output_file, "wb")
+                print("Detected Elias-Gamma method")
+                elias_gamma.decode(input_file, output_file)
             elif int.from_bytes(method, "big") == 3:
-                print("Fibonacci gama ainda não implmentado")
+                output_file = open(output_file, "wb")
+                print("Detected Fibonacci method")
+                fibonacci.decode(input_file, output_file)
             elif int.from_bytes(method, "big") == 4:
-                print("Unary gama ainda não implmentado")
+                output_file = open(output_file, "wb")
+                print("Detected Unary method")
+                unary.decode(input_file, output_file)
             elif int.from_bytes(method, "big") == 5:
-                print("Delta gama ainda não implmentado")
+                output_file = open(output_file, "wb")
+                print("Detected Delta method")
+                delta.decode(input_file, output_file)
     else:
         app_help()
 else:

@@ -7,49 +7,48 @@ import util
 def encode(character, divisor):
     digits = math.log(divisor, 2)
     prefix = int(ord(character) / divisor)
-    sufix = int(ord(character) % divisor)
+    suffix = int(ord(character) % divisor)
     i = 0
     j = 0
-    codeword = np.empty(128, int)
+    codeword = np.empty(8000, int)
     while i < prefix:
         codeword[j] = 0
         j += 1
         i += 1
     codeword[j] = 1
     j += 1
-    sufix = util.int_to_bitarray(sufix)
+    suffix = util.int_to_bitarray(suffix)
 
-    if sufix.size < digits:
+    if suffix.size < digits:
         i = 0
-        while i < digits - sufix.size:
+        while i < digits - suffix.size:
             codeword[j] = 0
             j += 1
             i += 1
 
-    for number in sufix:
+    for number in suffix:
         codeword[j] = number
         j += 1
     return codeword[0: j]
 
 
-def decode(coded, result, divisor):
+def decode(encoded_file, decoded_file, divisor):
     end_of_file = False
     reading_prefix = True
     prefix = 0
-    sufix = 0
-    sufix_digits_read = 0
+    suffix = 0
+    suffix_digits_read = 0
     while not end_of_file:
         j = 0
-        loaded_byte = coded.read(1)
+        loaded_byte = encoded_file.read(1)
         if len(loaded_byte) < 1:
             end_of_file = True
         else:
             buffer = loaded_byte
             j += 1
-
             digits = math.log(divisor, 2)
             bits = np.unpackbits(bytearray(buffer))
-            decoded = bytearray()
+            #decoded = bytearray()
             for bit in bits:
                 if reading_prefix:
                     if bit == 1:
@@ -57,13 +56,14 @@ def decode(coded, result, divisor):
                     else:
                         prefix += 1
                 else:
-                    sufix_digits_read += 1
-                    sufix += bit * (2 ** (digits - sufix_digits_read))
-                    if sufix_digits_read >= digits:
-                        decoded.append(int(prefix * divisor + sufix))
+                    suffix_digits_read += 1
+                    suffix += bit * (2 ** (digits - suffix_digits_read))
+                    if suffix_digits_read >= digits:
+                        decoded = bytearray() #isso aqui tava na linha 51, movi pois nao fazia sentido
+                        decoded.append(int(prefix * divisor + suffix))
                         reading_prefix = True
                         for byte in decoded:
-                            result.write(bytes([byte]))
+                            decoded_file.write(bytes([byte]))
                         prefix = 0
-                        sufix = 0
-                        sufix_digits_read = 0
+                        suffix = 0
+                        suffix_digits_read = 0
