@@ -24,7 +24,7 @@ def encode(character):
         i -= 1
     return codeword
 
-def decode(encoded_file, decoded_file):
+def decode(encoded_file, decoded_file, is_text_file):
     value = 0
     fibonacci_numbers = [1, 2]
     last_bit = 0
@@ -36,6 +36,8 @@ def decode(encoded_file, decoded_file):
         bits = np.unpackbits(bytearray(buffer))
         for bit in bits:
             if bit == 1 and last_bit == 1:
+                if is_text_file:
+                    value = util.reduce_text_size(value)
                 decoded_file.write(bytes([value - 1])) # subtraindo 1 pois nao codifica o 0
                 last_bit = 0
                 fibonacci_numbers = [1, 2]

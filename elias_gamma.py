@@ -29,7 +29,7 @@ def encode(character):
     return codeword
 
 
-def decode(encoded_file, decoded_file):
+def decode(encoded_file, decoded_file, is_text_file):
     end_of_file = False
     prefix = 0
     suffix = 0
@@ -54,6 +54,8 @@ def decode(encoded_file, decoded_file):
                     decoded.append(int(2 ** prefix + suffix - 1)) # subtraindo 1 pois nao codifica 0
                     found_stop_bit = False
                     for byte in decoded:
+                        if is_text_file:
+                            byte = util.reduce_text_size(byte)
                         decoded_file.write(bytes([byte]))
                     prefix = 0
                     suffix = 0

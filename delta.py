@@ -36,7 +36,7 @@ def encode(character, last_character):
     return codeword
 
 
-def decode(encoded_file, decoded_file):
+def decode(encoded_file, decoded_file, is_text):
     delta = 0
     last_value = 0
     digits_read = 0
@@ -75,7 +75,10 @@ def decode(encoded_file, decoded_file):
                             value = last_value - delta
                         else:
                             value = last_value + delta
-                        decoded_file.write(bytes([value]))
+                        if is_text:
+                            decoded_file.write(bytes([util.reduce_text_size(value)]))
+                        else:
+                            decoded_file.write(bytes([value]))
                         last_value = value
                         delta = 0
                         digits_read = 0

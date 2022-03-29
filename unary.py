@@ -14,7 +14,7 @@ def encode(character):
     codeword[length] = 1
     return codeword
 
-def decode(encoded_file, decoded_file):
+def decode(encoded_file, decoded_file, is_text_file):
     end_of_file = False
     value = 0
     while not end_of_file:
@@ -26,5 +26,7 @@ def decode(encoded_file, decoded_file):
             if bit == 0:
                 value += 1
             elif bit == 1:
+                if is_text_file:
+                    value = util.reduce_text_size(value)
                 decoded_file.write(bytes([value]))
                 value = 0
