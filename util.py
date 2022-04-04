@@ -47,7 +47,6 @@ def write_to_file(input_file, output_file, method):
     end_of_file = False
     buffer = np.empty(800000, int)
     j = 0
-    buffer_size = 0
     while not end_of_file:
         loaded_byte = f.read(1)
         if len(loaded_byte) < 1:
@@ -66,16 +65,21 @@ def write_to_file(input_file, output_file, method):
             elif method == 5:
                 codeword = delta.encode(loaded_byte, last_byte)
                 last_byte = loaded_byte
-            buffer_size += len(codeword)
             for number in codeword:
                 buffer[j] = number
                 j += 1
-        if end_of_file or buffer_size % 8 == 0:
+        if end_of_file or j % 8 == 0:
+            if method == 5:
+                # no caso da encodificação delta, se existem bits faltando para completar um byte
+                # é adicionado um stopbit 1, dessa forma os bits 0 não são considerados repetições
+                # do último caractere
+                if end_of_file and (j % 8) != 0:
+                    buffer[j] = 1
+                    j += 1
             codewords = bytearray(np.packbits(buffer[0: j]))
             for byte in codewords:
                 w.write(bytes([byte]))
             buffer = np.empty(800000, int)
-            buffer_size = 0
             j = 0
     f.close()
     w.close()
