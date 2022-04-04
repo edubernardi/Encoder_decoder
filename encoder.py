@@ -24,15 +24,15 @@ if len(sys.argv) >= 4:
     if function.lower() == "encode":
         if len(sys.argv) == 5:
             method = sys.argv[4]
-            if method.lower() == "golomb" or function.lower() == "1":
+            if method.lower() == "golomb" or method.lower() == "1":
                 util.write_to_file(input_file, output_file_name, 1)
-            elif method.lower() == "elias-gamma" or method.lower() == "elias gamma" or function.lower() == "2":
+            elif method.lower() == "elias-gamma" or method.lower() == "elias gamma" or method.lower() == "2":
                 util.write_to_file(input_file, output_file_name, 2)
-            elif method.lower() == "fibonacci" or function.lower() == "3":
+            elif method.lower() == "fibonacci" or method.lower() == "3":
                 util.write_to_file(input_file, output_file_name, 3)
-            elif method.lower() == "unary" or function.lower() == "4":
+            elif method.lower() == "unary" or method.lower() == "4":
                 util.write_to_file(input_file, output_file_name, 4)
-            elif method.lower() == "delta" or function.lower() == "5":
+            elif method.lower() == "delta" or method.lower() == "5":
                 util.write_to_file(input_file, output_file_name, 5)
         else:
             app_help()

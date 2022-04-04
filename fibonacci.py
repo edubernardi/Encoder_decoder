@@ -10,7 +10,13 @@ def encode(character):
         fibonacci_numbers.append(fibonacci_numbers[len(fibonacci_numbers) - 1] +
                                  fibonacci_numbers[len(fibonacci_numbers) - 2])
     i = len(fibonacci_numbers) - 2
-    codeword = np.empty(len(fibonacci_numbers), int)
+
+    length = len(fibonacci_numbers)
+    if fibonacci_numbers[len(fibonacci_numbers) - 1] == value:
+        length += 1
+        i += 1
+
+    codeword = np.empty(length, int)
     codeword[i + 1] = 1
     while i >= 0:
         if fibonacci_numbers[i] <= value:
@@ -36,9 +42,10 @@ def decode(encoded_file, decoded_file, is_text_file):
         bits = np.unpackbits(bytearray(buffer))
         for bit in bits:
             if bit == 1 and last_bit == 1:
+                value -= 1  # subtraindo 1 pois nao codifica o 0
                 if is_text_file:
                     value = util.reduce_text_size(value)
-                decoded_file.write(bytes([value - 1])) # subtraindo 1 pois nao codifica o 0
+                decoded_file.write(bytes([value]))
                 last_bit = 0
                 fibonacci_numbers = [1, 2]
                 value = 0
