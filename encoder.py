@@ -48,41 +48,51 @@ if len(sys.argv) >= 4:
         if len(method) > 0:
             crc_a = crc.calculate(bytearray(is_text_file))
             crc_b = crc.calculate(bytearray(method))
+
+            verified_headers = True
+
             if crc_a == int.from_bytes(input_file.read(1), "big"):
-                print("CRC-8 verification, header 'is_text_file' is ok")
+                print("CRC-8 verification: header 'is_text_file' is ok")
             else:
                 print("Header 'is_text_file' has been altered, stopping decoder")
+                verified_headers = False
             if crc_b == int.from_bytes(input_file.read(1), "big"):
-                print("CRC-8 verification, header 'method' is ok")
+                print("CRC-8 verification: header 'method' is ok")
             else:
                 print("Header 'method' has been altered, stopping decoder")
+                verified_headers = False
 
-            if int.from_bytes(method, "big") == 1:
-                crc_c = crc.calculate(bytearray(divisor))
-                if crc_c == int.from_bytes(input_file.read(1), "big"):
-                    print("CRC-8 verification, header 'k' is ok")
-                else:
-                    print("Header 'k' has been altered, stopping decoder")
+            if verified_headers:
+                if int.from_bytes(method, "big") == 1:
+                    data = bytearray()
+                    data += bytes([divisor])
+                    crc_c = crc.calculate(bytearray(data))
+                    if crc_c == int.from_bytes(input_file.read(1), "big"):
+                        print("CRC-8 verification: header 'k' is ok")
+                    else:
+                        print("Header 'k' has been altered, stopping decoder")
+                        verified_headers = False
 
-                output_file = open(output_file_name, "wb")
-                print("Detected Golomb method with divisor", divisor)
-                golomb.decode(input_file, output_file, divisor, is_text_file)
-            elif int.from_bytes(method, "big") == 2:
-                output_file = open(output_file_name, "wb")
-                print("Detected Elias-Gamma method")
-                elias_gamma.decode(input_file, output_file, is_text_file)
-            elif int.from_bytes(method, "big") == 3:
-                output_file = open(output_file_name, "wb")
-                print("Detected Fibonacci method")
-                fibonacci.decode(input_file, output_file, is_text_file)
-            elif int.from_bytes(method, "big") == 4:
-                output_file = open(output_file_name, "wb")
-                print("Detected Unary method")
-                unary.decode(input_file, output_file, is_text_file)
-            elif int.from_bytes(method, "big") == 5:
-                output_file = open(output_file_name, "wb")
-                print("Detected Delta method")
-                delta.decode(input_file, output_file, is_text_file)
+                    if verified_headers:
+                        output_file = open(output_file_name, "wb")
+                        print("Detected Golomb method with divisor", divisor)
+                        golomb.decode(input_file, output_file, divisor, is_text_file)
+                elif int.from_bytes(method, "big") == 2:
+                    output_file = open(output_file_name, "wb")
+                    print("Detected Elias-Gamma method")
+                    elias_gamma.decode(input_file, output_file, is_text_file)
+                elif int.from_bytes(method, "big") == 3:
+                    output_file = open(output_file_name, "wb")
+                    print("Detected Fibonacci method")
+                    fibonacci.decode(input_file, output_file, is_text_file)
+                elif int.from_bytes(method, "big") == 4:
+                    output_file = open(output_file_name, "wb")
+                    print("Detected Unary method")
+                    unary.decode(input_file, output_file, is_text_file)
+                elif int.from_bytes(method, "big") == 5:
+                    output_file = open(output_file_name, "wb")
+                    print("Detected Delta method")
+                    delta.decode(input_file, output_file, is_text_file)
     else:
         app_help()
 else:
