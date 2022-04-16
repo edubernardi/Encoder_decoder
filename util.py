@@ -6,6 +6,7 @@ import unary
 import elias_gamma
 import fibonacci
 import delta
+import crc
 
 def int_to_bitarray(i):
     bitarray = np.empty(32, int)
@@ -47,6 +48,19 @@ def write_to_file(input_file, output_file, method):
     end_of_file = False
     buffer = np.empty(800000, int)
     j = 0
+
+    data = bytearray() # crc
+    data += bytes([is_text_file])
+    w.write(bytes([crc.calculate(data)]))
+    data = bytearray()
+    data += bytes([method])
+    w.write(bytes([crc.calculate(data)]))
+
+    if method == 1:
+        data = bytearray()
+        data += bytes([k])
+        w.write(bytes([crc.calculate(data)]))
+
     while not end_of_file:
         loaded_byte = f.read(1)
         if len(loaded_byte) < 1:

@@ -7,6 +7,7 @@ import unary
 import elias_gamma
 import fibonacci
 import delta
+import crc
 
 
 def app_help():
@@ -41,9 +42,28 @@ if len(sys.argv) >= 4:
         input_file = open(input_file, "rb")
         is_text_file = input_file.read(1)
         method = input_file.read(1)
+        if int.from_bytes(method, "big") == 1:
+            divisor = int.from_bytes(input_file.read(1), "big")
+
         if len(method) > 0:
+            crc_a = crc.calculate(bytearray(is_text_file))
+            crc_b = crc.calculate(bytearray(method))
+            if crc_a == int.from_bytes(input_file.read(1), "big"):
+                print("CRC-8 verification, header 'is_text_file' is ok")
+            else:
+                print("Header 'is_text_file' has been altered, stopping decoder")
+            if crc_b == int.from_bytes(input_file.read(1), "big"):
+                print("CRC-8 verification, header 'method' is ok")
+            else:
+                print("Header 'method' has been altered, stopping decoder")
+
             if int.from_bytes(method, "big") == 1:
-                divisor = int.from_bytes(input_file.read(1), "big")
+                crc_c = crc.calculate(bytearray(divisor))
+                if crc_c == int.from_bytes(input_file.read(1), "big"):
+                    print("CRC-8 verification, header 'k' is ok")
+                else:
+                    print("Header 'k' has been altered, stopping decoder")
+
                 output_file = open(output_file_name, "wb")
                 print("Detected Golomb method with divisor", divisor)
                 golomb.decode(input_file, output_file, divisor, is_text_file)
