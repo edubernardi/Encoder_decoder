@@ -8,6 +8,7 @@ import elias_gamma
 import fibonacci
 import delta
 import time
+import os
 
 def app_help():
     print("Usage:  encoder.py [encode] [input file name] [output file name] [method]")
@@ -41,6 +42,7 @@ if len(sys.argv) >= 4:
                 util.write_to_file(input_file, output_file_name, 5)
             #ecc
             print("Encoding finished" + " - Execution time: " + str(time.process_time()) + "s")
+            print("Size change (compressed file size / input file size): " + "{:.2f}".format(os.stat(output_file_name).st_size / os.stat(input_file).st_size))
             print("Generating noise control file: " + sys.argv[3] + ".ecc")
             util.encode_noise_control(output_file_name, sys.argv[3] + ".ecc")
             print("Noise control file created: " + sys.argv[3] + ".ecc" + " - Execution time: " + str(time.process_time()) + "s")
@@ -48,7 +50,7 @@ if len(sys.argv) >= 4:
             app_help()
     elif function.lower() == "decode":
         if input_file.count(".") < 1 or input_file.split('.')[len(input_file.split('.')) - 1] != "ecc":
-            print("Please provide a file with the .ecc extension")
+            print("Please provide a file with the .ecc extension as input")
         else:
             print("Started decoding", input_file, "into", output_file_name + " - Execution time: " + str(time.process_time()) + "s")
             util.decode_noise_control(input_file, input_file.split('.')[0] + ".cod")

@@ -26,7 +26,6 @@ def encode(data):
         else:
             result[i] = codewords[1][i - 7]
         i += 1
-
     return result
 
 def decode(data):
@@ -65,11 +64,11 @@ def decode(data):
                 if flags[2]:
                     codewords[i][2] = (codewords[i][2] + 1) % 2
                 else:
-                    codewords[i][1] = (codewords[i][2] + 1) % 2
+                    codewords[i][1] = (codewords[i][1] + 1) % 2
             else:
-                codewords[i][0] = (codewords[i][2] + 1) % 2
+                codewords[i][0] = (codewords[i][0] + 1) % 2
         elif flags[1] or flags[2]:
-            codewords[i][3] = (codewords[i][2] + 1) % 2
+            codewords[i][3] = (codewords[i][3] + 1) % 2
         i += 1
 
     result = np.ndarray(int((4 * len(bits))/7), int)

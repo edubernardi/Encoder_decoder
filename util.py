@@ -144,10 +144,11 @@ def encode_noise_control(input_file, output_file):
         loaded_byte = f.read(1)
         if len(loaded_byte) < 1:
             end_of_file = True
-        codeword = hamming.encode(loaded_byte)
-        for number in codeword:
-            buffer[j] = number
-            j += 1
+        if not end_of_file:
+            codeword = hamming.encode(loaded_byte)
+            for number in codeword:
+                buffer[j] = number
+                j += 1
         if end_of_file or j % 8 == 0:
             codewords = bytearray(np.packbits(buffer[0: j]))
             for byte in codewords:
@@ -191,10 +192,10 @@ def decode_noise_control(input_file, output_file):
     buffer = np.empty(800000, int)
     j = 0
     while not end_of_file and verified_headers:
-        loaded_bytes = f.read(7)
+        loaded_bytes = bytearray(f.read(7))
         if len(loaded_bytes) < 7:
             end_of_file = True
-        codeword = hamming.decode(bytearray(loaded_bytes))
+        codeword = hamming.decode(loaded_bytes)
         for number in codeword:
             buffer[j] = number
             j += 1
