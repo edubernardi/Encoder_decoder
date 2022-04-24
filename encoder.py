@@ -7,8 +7,7 @@ import unary
 import elias_gamma
 import fibonacci
 import delta
-import crc
-
+import time
 
 def app_help():
     print("Usage:  encoder.py [encode] [input file name] [output file name] [method]")
@@ -21,62 +20,49 @@ if len(sys.argv) >= 4:
     input_file = sys.argv[2]
     output_file_name = sys.argv[3]
 
-
     if function.lower() == "encode":
+        output_file_name += ".cod"
         if len(sys.argv) == 5:
             method = sys.argv[4]
+            current_time = " - Execution time: " + str(time.process_time()) + "s"
             if method.lower() == "golomb" or method.lower() == "1":
                 util.write_to_file(input_file, output_file_name, 1)
             elif method.lower() == "elias-gamma" or method.lower() == "elias gamma" or method.lower() == "2":
+                print("Started encoding", input_file, "into", output_file_name, "using Elias-Gamma method" + current_time)
                 util.write_to_file(input_file, output_file_name, 2)
             elif method.lower() == "fibonacci" or method.lower() == "3":
+                print("Started encoding", input_file, "into", output_file_name, "using Fibonacci method" + current_time)
                 util.write_to_file(input_file, output_file_name, 3)
             elif method.lower() == "unary" or method.lower() == "4":
+                print("Started encoding", input_file, "into", output_file_name, "using Unary method" + current_time)
                 util.write_to_file(input_file, output_file_name, 4)
             elif method.lower() == "delta" or method.lower() == "5":
+                print("Started encoding", input_file, "into", output_file_name, "using Delta method" + current_time)
                 util.write_to_file(input_file, output_file_name, 5)
+            #ecc
+            print("Encoding finished" + " - Execution time: " + str(time.process_time()) + "s")
+            print("Generating noise control file: " + sys.argv[3] + ".ecc")
+            util.encode_noise_control(output_file_name, sys.argv[3] + ".ecc")
+            print("Noise control file created: " + sys.argv[3] + ".ecc" + " - Execution time: " + str(time.process_time()) + "s")
         else:
             app_help()
     elif function.lower() == "decode":
-        print("Started decoding", input_file, "into", output_file_name)
-        input_file = open(input_file, "rb")
-        is_text_file = input_file.read(1)
-        method = input_file.read(1)
-        if int.from_bytes(method, "big") == 1:
+        if input_file.count(".") < 1 or input_file.split('.')[len(input_file.split('.')) - 1] != "ecc":
+            print("Please provide a file with the .ecc extension")
+        else:
+            print("Started decoding", input_file, "into", output_file_name + " - Execution time: " + str(time.process_time()) + "s")
+            util.decode_noise_control(input_file, input_file.split('.')[0] + ".cod")
+            print("Error correction completed" + " - Execution time: " + str(time.process_time()) + "s")
+            input_file = open(input_file.split('.')[0] + ".cod", "rb")
+            is_text_file = input_file.read(1)
+            method = input_file.read(1)
             divisor = int.from_bytes(input_file.read(1), "big")
-
-        if len(method) > 0:
-            crc_a = crc.calculate(bytearray(is_text_file))
-            crc_b = crc.calculate(bytearray(method))
-
-            verified_headers = True
-
-            if crc_a == int.from_bytes(input_file.read(1), "big"):
-                print("CRC-8 verification: header 'is_text_file' is ok")
-            else:
-                print("Header 'is_text_file' has been altered, stopping decoder")
-                verified_headers = False
-            if crc_b == int.from_bytes(input_file.read(1), "big"):
-                print("CRC-8 verification: header 'method' is ok")
-            else:
-                print("Header 'method' has been altered, stopping decoder")
-                verified_headers = False
-
-            if verified_headers:
+            if len(method) > 0:
+                print("Starting decoder - Execution time: " + str(time.process_time()) + "s")
                 if int.from_bytes(method, "big") == 1:
-                    data = bytearray()
-                    data += bytes([divisor])
-                    crc_c = crc.calculate(bytearray(data))
-                    if crc_c == int.from_bytes(input_file.read(1), "big"):
-                        print("CRC-8 verification: header 'k' is ok")
-                    else:
-                        print("Header 'k' has been altered, stopping decoder")
-                        verified_headers = False
-
-                    if verified_headers:
-                        output_file = open(output_file_name, "wb")
-                        print("Detected Golomb method with divisor", divisor)
-                        golomb.decode(input_file, output_file, divisor, is_text_file)
+                    output_file = open(output_file_name, "wb")
+                    print("Detected Golomb method with divisor", divisor)
+                    golomb.decode(input_file, output_file, divisor, is_text_file)
                 elif int.from_bytes(method, "big") == 2:
                     output_file = open(output_file_name, "wb")
                     print("Detected Elias-Gamma method")
@@ -93,6 +79,7 @@ if len(sys.argv) >= 4:
                     output_file = open(output_file_name, "wb")
                     print("Detected Delta method")
                     delta.decode(input_file, output_file, is_text_file)
+                print("Decoder finished - Execution time: " + str(time.process_time()) + "s")
     else:
         app_help()
 else:
