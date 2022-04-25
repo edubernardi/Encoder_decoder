@@ -50,6 +50,6 @@ As operações de leitura e escrita dos arquivos são realizadas byte a byte. Os
 
 No caso da codificação binária, foi optado por representar valores através de sequências de bits 0, separados por stop-bits 1. Os demais algoritmos não possuem diferenças consideráveis da sua proposta básica.
 
-Para a realização das operações, é utilizado um buffer que é escrito no arquivo alvo sempre que seu comprimento é divisível por 8 com resto 0 (formando um byte completo), ou quando o arquivo de entrada chega a seu fim.
+Para a realização das operações, é utilizado um buffer de bits que é escrito no arquivo alvo sempre que seu comprimento é divisível por 8 com resto 0 (formando um byte completo), ou quando o arquivo de entrada chega a seu fim.
 
 Vários dos algoritmos empregados possuem eficiência maior quando trabalhando com valores menores, especialmente a codificação em Unário. Porém os caracteres ascii minúsculos, os mais usados, se iniciam no valor decimal 97. Para aumentar a eficiência na compressão nesses casos, é feita uma validação se o valor ascii médio do arquivo é maior do que 65. Se isso for verdade, é empregada um soma nos valores dos caracteres, fazendo com que os de valor entre 97 e 123 sofram uma subtração de 95, e os entre 1 e 28 uma adição de 95. Dessa forma, caracteres que são pouco usados são efetivamente trocados pelos carateres de maior uso no documento. A informação se o arquivo original se trata de um arquivo de texto é passada através de um header, assim o decoder pode realizar a operação contrária caso necessário.
