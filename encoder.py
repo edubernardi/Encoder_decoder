@@ -70,6 +70,10 @@ if len(sys.argv) >= 4:
                 input_file = input_file.split('.')[0] + ".cod"
             input_file = open(input_file, "rb")
             is_text_file = input_file.read(1)
+            if is_text_file == 1:
+                is_text_file = True
+            else:
+                is_text_file = False
             method = input_file.read(1)
             divisor = int.from_bytes(input_file.read(1), "big")
             if len(method) > 0:

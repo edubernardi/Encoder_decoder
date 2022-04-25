@@ -106,7 +106,10 @@ def is_text(input_file):
             count += 1
     average = sum / count
     file.close()
-    return average > 65
+    if average > 65:
+        return 1
+    else:
+        return 0
 
 
 def reduce_text_size(character):
