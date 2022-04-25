@@ -42,20 +42,27 @@ if len(sys.argv) >= 4:
                 util.write_to_file(input_file, output_file_name, 5)
             #ecc
             print("Encoding finished" + " - Execution time: " + str(time.process_time()) + "s")
-            print("Size change (compressed file size / input file size): " + "{:.2f}".format(os.stat(output_file_name).st_size / os.stat(input_file).st_size))
+            print("Size change (compressed file size / input file size): " +
+                  "{:.2f}".format(os.stat(output_file_name).st_size / os.stat(input_file).st_size))
             print("Generating noise control file: " + sys.argv[3] + ".ecc")
             util.encode_noise_control(output_file_name, sys.argv[3] + ".ecc")
             print("Noise control file created: " + sys.argv[3] + ".ecc" + " - Execution time: " + str(time.process_time()) + "s")
         else:
             app_help()
     elif function.lower() == "decode":
-        if input_file.count(".") < 1 or input_file.split('.')[len(input_file.split('.')) - 1] != "ecc":
+        if input_file.count(".") < 1 or (input_file.split('.')[len(input_file.split('.')) - 1] != "ecc" and input_file.split('.')[len(input_file.split('.')) - 1] != "cod"):
             print("Please provide a file with the .ecc extension as input")
         else:
+            if input_file.split('.')[len(input_file.split('.')) - 1] == "cod":
+                has_ecc = False
+            else:
+                has_ecc = True
             print("Started decoding", input_file, "into", output_file_name + " - Execution time: " + str(time.process_time()) + "s")
-            util.decode_noise_control(input_file, input_file.split('.')[0] + ".cod")
-            print("Error correction completed" + " - Execution time: " + str(time.process_time()) + "s")
-            input_file = open(input_file.split('.')[0] + ".cod", "rb")
+            if has_ecc:
+                util.decode_noise_control(input_file, input_file.split('.')[0] + ".cod")
+                print("Error correction completed" + " - Execution time: " + str(time.process_time()) + "s")
+                input_file = input_file.split('.')[0] + ".cod"
+            input_file = open(input_file, "rb")
             is_text_file = input_file.read(1)
             method = input_file.read(1)
             divisor = int.from_bytes(input_file.read(1), "big")

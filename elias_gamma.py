@@ -19,7 +19,7 @@ def encode(character):
     remainder = util.int_to_bitarray(value % (2 ** i))
 
     difference = j + i - len(remainder)
-    while j < difference:  #  appending 0s so that the suffix is same size as suffix
+    while j < difference:  #  apendando 0s para que o comprimento do prefixo e sufixo sejam iguais
         codeword[j] = 0
         j += 1
 

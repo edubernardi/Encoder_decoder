@@ -48,7 +48,6 @@ def decode(encoded_file, decoded_file, divisor, is_text_file):
             j += 1
             digits = math.log(divisor, 2)
             bits = np.unpackbits(bytearray(buffer))
-            #decoded = bytearray()
             for bit in bits:
                 if reading_prefix:
                     if bit == 1:
@@ -59,7 +58,7 @@ def decode(encoded_file, decoded_file, divisor, is_text_file):
                     suffix_digits_read += 1
                     suffix += bit * (2 ** (digits - suffix_digits_read))
                     if suffix_digits_read >= digits:
-                        decoded = bytearray() #isso aqui tava na linha 51, movi pois nao fazia sentido
+                        decoded = bytearray()
                         decoded.append(int(prefix * divisor + suffix))
                         reading_prefix = True
                         for byte in decoded:
