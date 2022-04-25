@@ -14,6 +14,7 @@ def encode(character):
     codeword[length] = 1
     return codeword
 
+
 def decode(encoded_file, decoded_file, is_text_file):
     end_of_file = False
     value = 0

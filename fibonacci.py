@@ -3,8 +3,9 @@ import numpy as np
 import sys
 import util
 
+
 def encode(character):
-    value = int(ord(character)) + 1 # somando 1 pois nao codifica o 0
+    value = int(ord(character)) + 1  # somando 1 pois nao codifica o 0
     fibonacci_numbers = [1, 2]
     while fibonacci_numbers[len(fibonacci_numbers) - 1] < value:
         fibonacci_numbers.append(fibonacci_numbers[len(fibonacci_numbers) - 1] +
@@ -30,6 +31,7 @@ def encode(character):
         i -= 1
     return codeword
 
+
 def decode(encoded_file, decoded_file, is_text_file):
     value = 0
     fibonacci_numbers = [1, 2]
@@ -54,4 +56,3 @@ def decode(encoded_file, decoded_file, is_text_file):
                 value += bit * (fibonacci_numbers[len(fibonacci_numbers) - 2])
                 fibonacci_numbers.append(fibonacci_numbers[len(fibonacci_numbers) - 1] +
                                          fibonacci_numbers[len(fibonacci_numbers) - 2])
-

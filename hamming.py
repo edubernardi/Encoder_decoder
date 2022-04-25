@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def encode(data):
     data = np.unpackbits(bytearray(data))
     codewords = [np.ndarray(7, int), np.ndarray(7, int)]
@@ -28,11 +29,12 @@ def encode(data):
         i += 1
     return result
 
+
 def decode(data):
     bits = np.unpackbits(data)
-    if len(bits) % 7 != 0: # removendo bits filler do fim do byte
+    if len(bits) % 7 != 0:  # removendo bits filler do fim do byte
         temp = bits
-        bits = np.ndarray(int(len(temp)/7) * 7, int)
+        bits = np.ndarray(int(len(temp) / 7) * 7, int)
         i = 0
         while i < len(bits):
             bits[i] = temp[i]
@@ -71,7 +73,7 @@ def decode(data):
             codewords[i][3] = (codewords[i][3] + 1) % 2
         i += 1
 
-    result = np.ndarray(int((4 * len(bits))/7), int)
+    result = np.ndarray(int((4 * len(bits)) / 7), int)
     i = 0
     while i < len(bits) / 7:
         j = 0

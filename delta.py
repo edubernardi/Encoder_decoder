@@ -3,6 +3,7 @@ import numpy as np
 import sys
 import util
 
+
 def encode(character, last_character):
     value_char = int(ord(character))
     value_last = int(ord(last_character))
@@ -25,7 +26,7 @@ def encode(character, last_character):
                 i += 1
         elif delta < 0:
             delta = util.int_to_bitarray(- delta)
-            codeword[1] = 1 # assinando o valor pois é negativo
+            codeword[1] = 1  # assinando o valor pois é negativo
             i = 2
             while i < (10 - len(delta)):
                 codeword[i] = 0

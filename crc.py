@@ -7,6 +7,7 @@ import elias_gamma
 import fibonacci
 import delta
 
+
 def calculate(data):
     bits = np.ndarray(len(data) * 8 * 2, int)
     data = np.unpackbits(data)
@@ -36,7 +37,7 @@ def calculate(data):
 
         i = found_msb
         while i - found_msb < len(crc_8):
-            if bits[i] == crc_8[i - found_msb]: #xor
+            if bits[i] == crc_8[i - found_msb]:  # xor
                 bits[i] = 0
             else:
                 bits[i] = 1

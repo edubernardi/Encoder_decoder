@@ -3,8 +3,9 @@ import numpy as np
 import sys
 import util
 
+
 def encode(character):
-    value = int(ord(character)) + 1 #somando um pois nao codifica 0
+    value = int(ord(character)) + 1  # somando um pois nao codifica 0
     i = 0
     while 2 ** i <= value:
         i += 1
@@ -19,7 +20,7 @@ def encode(character):
     remainder = util.int_to_bitarray(value % (2 ** i))
 
     difference = j + i - len(remainder)
-    while j < difference:  #  apendando 0s para que o comprimento do prefixo e sufixo sejam iguais
+    while j < difference:  # apendando 0s para que o comprimento do prefixo e sufixo sejam iguais
         codeword[j] = 0
         j += 1
 
@@ -51,7 +52,7 @@ def decode(encoded_file, decoded_file, is_text_file):
                 suffix += bit * (2 ** (prefix - suffix_digits_read))
                 if suffix_digits_read >= prefix:
                     decoded = bytearray()
-                    decoded.append(int(2 ** prefix + suffix - 1)) # subtraindo 1 pois nao codifica 0
+                    decoded.append(int(2 ** prefix + suffix - 1))  # subtraindo 1 pois nao codifica 0
                     found_stop_bit = False
                     for byte in decoded:
                         if is_text_file:

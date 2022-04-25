@@ -10,6 +10,7 @@ import crc
 import hamming
 import time
 
+
 def int_to_bitarray(i):
     bitarray = np.empty(32, int)
     j = 0
@@ -20,6 +21,7 @@ def int_to_bitarray(i):
         j += 1
     bitarray = np.flipud(bitarray[0: j])
     return bitarray
+
 
 def write_to_file(input_file, output_file, method):
     f = open(input_file, "rb")
@@ -106,12 +108,14 @@ def is_text(input_file):
     file.close()
     return average > 65
 
+
 def reduce_text_size(character):
     if 96 < character < 123:
         character -= 95
     elif 1 < character < 28:
         character += 95
     return character
+
 
 def encode_noise_control(input_file, output_file):
     f = open(input_file, "rb")
@@ -158,12 +162,13 @@ def encode_noise_control(input_file, output_file):
     f.close()
     w.close()
 
+
 def decode_noise_control(input_file, output_file):
     f = open(input_file, "rb")
     w = open(output_file, "wb")
 
     # verificando headers pelo crc_8
-    print("Verifying headers"+ " - Execution time: " + str(time.process_time()) + "s")
+    print("Verifying headers" + " - Execution time: " + str(time.process_time()) + "s")
     i = 0
     headers = []
     end_of_file = False
