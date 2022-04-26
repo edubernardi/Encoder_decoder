@@ -9,6 +9,8 @@ Ao executar o programa na função encode são gerados dois arquivos, um arquivo
 
 Para a decoficação, é possível fornecer tanto o arquivo .cod quanto .ecc, o decoder realizara as operações necessárias de acordo com a extensão do documento. É interessante também comperar o tempo de execução necessário, tanto entre algoritmos diferentes quanto utilizando ou não ECC.
 
+Fornecendo um arquivo .ecc ao decoder, também será gerado o arquivo .cod correspondente, que se trata do arquivo codificado subtraido da codificação de controle de erro. Dessa forma é possível comparar se o tratamento de erro foi de fato removido corretamente e se não houve perda de dados, além de comparar a performance com ambas as entradas.
+
 O uso da aplicação é feito através de parametros fornecidos na execução pela linha de comando. O arquivo principal a ser executado é encoder.py. O uso é descrito a seguir:
 
 Para codificar um arquivo:
