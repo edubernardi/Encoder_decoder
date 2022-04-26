@@ -31,7 +31,7 @@ def write_to_file(input_file, output_file, method):
     w.write(bytes([method]))
     if method == 1:
         k = int(input("Divisor for Golomb function (must be a power of 2):"))
-        if k % 2 != 0:
+        if math.log(k, 2) % 1 != 0:
             print("Invalid value for divisor, setting divisor to default value (4)")
             k = 4
         else:
